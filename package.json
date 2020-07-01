@@ -9,7 +9,8 @@
   "dependencies": {
     "express": "4.16.4",
     "mongodb": "3.4.0",
-    "mongoose": "5.9.20"
+    "mongoose": "5.9.20",
+    "pug": "3.0.0"
   },
   "keywords": []
 }

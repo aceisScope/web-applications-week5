@@ -13,9 +13,18 @@ mongoose.connection.on("error", err => {
 });
 
 const app = express();
+app.set("views", __dirname + "/views");
+app.set("view engine", "pug");
 
 app.get("/", (req, res) => {
-  res.send("hellotttte test");
+  var board = [
+    [" ", " ", " ", " ", " "],
+    [" ", " ", " ", " ", " "],
+    [" ", " ", " ", " ", " "],
+    [" ", " ", " ", " ", " "],
+    [" ", " ", " ", " ", " "]
+  ];
+  res.render("index", { board: board });
 });
 
 app.get("/qwe", (req, res) => {

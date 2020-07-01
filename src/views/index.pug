@@ -1,0 +1,14 @@
+html
+  head
+    title= "Tic Tac Toe"
+    style
+      include styles.css
+  body
+    div(id="board")
+    table
+      each row in board
+        tr
+          each col in row
+            td=row[col]
+
+    
