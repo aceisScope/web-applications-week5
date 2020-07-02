@@ -22,7 +22,12 @@ const Board = (module.exports = mongoose.model("Board", boardSchema));
 
 module.exports.updateBoard = (row, col, status, callback) => {
   const query = { row: row, col: col };
-  Board.findOneAndUpdate(query, { status: status }, { new: true }, callback);
+  Board.findOneAndUpdate(
+    query,
+    { status: status },
+    { upsert: true, new: true },
+    callback
+  );
 };
 
 module.exports.getBoard = callback => {

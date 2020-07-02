@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
+const rules = require("./rules");
+const Board = require("./board");
 
 const connectionString = process.env.MONGODB_URL;
 
@@ -24,8 +26,6 @@ var board = [
   [" ", " ", " ", " ", " "],
   [" ", " ", " ", " ", " "]
 ];
-var size = 5;
-var players = { X: 1, O: 2 };
 
 // player 1: X, playter 2: O
 var turn = "X";
@@ -35,92 +35,36 @@ var winner = 0;
 app.post("/submit", (req, res) => {
   let row = req.body.row;
   let col = req.body.col;
+  let player = rules.getPlayerByTurn(turn);
   let value = board[row][col];
   if (value === " ") {
     // empty box
     moves++;
     board[row][col] = turn;
-    winner = getWinner(row, col, turn);
-    if (winner === 0) {
-      if (moves < size * size) {
-        switchTurn();
+    Board.updateBoard(row, col, player, (err, result) => {
+      if (err) throw err;
+      winner = rules.getWinner(board, row, col, turn);
+      console.log("winner:", winner);
+      if (winner === 0) {
+        if (moves < 25) {
+          turn = rules.switchTurn(turn);
+        }
       }
-    }
-    res.render("index", { board: board, winner: winner });
-  } else {
-    res.redirect("/");
+      //res.render("index", { board: board, winner: winner });
+    });
   }
+
+  res.redirect("/");
 });
 
 app.get("/", (req, res) => {
-  res.render("index", { board: board, winner: 0 });
+  Board.getBoard((err, result) => {
+    if (err) throw err;
+    result.forEach(e => {
+      board[e.row][e.col] = rules.getTurnByPlayer(e.status);
+    });
+    res.render("index", { board: board, winner: winner });
+  });
 });
 
 app.listen(8080);
-
-function switchTurn() {
-  if (turn === "X") {
-    turn = "O";
-  } else {
-    turn = "X";
-  }
-}
-// return playter 1 or 2 if there's a winnder, otherwise return 0
-function getWinner(row, col, turn) {
-  // row
-  let rowElements = board[row];
-  let rowCount = 0;
-  for (let e of rowElements) {
-    if (e === turn) {
-      rowCount++;
-    } else {
-      break;
-    }
-  }
-  if (rowCount === size) {
-    return players[turn];
-  }
-  // column
-  let colCount = 0;
-  for (let j = 0; j < size; j++) {
-    let e = board[j][col];
-    if (e === turn) {
-      colCount++;
-    } else {
-      break;
-    }
-  }
-  if (colCount === size) {
-    return players[turn];
-  }
-  // diagonal
-  if (row === col || row + col === size - 1) {
-    let leftDiagCount = 0;
-    for (let j = 0; j < size; j++) {
-      let e = board[j][j];
-      if (e === turn) {
-        leftDiagCount++;
-      } else {
-        break;
-      }
-    }
-    if (leftDiagCount === size) {
-      return players[turn];
-    }
-
-    let rightDiagCount = 0;
-    for (let j = 4; j >= 0; j--) {
-      let e = board[size - 1 - j][j];
-      if (e === turn) {
-        rightDiagCount++;
-      } else {
-        break;
-      }
-    }
-    if (rightDiagCount === size) {
-      return players[turn];
-    }
-  }
-
-  return 0;
-}
