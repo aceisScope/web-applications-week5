@@ -30,6 +30,7 @@ var players = { X: 1, O: 2 };
 // player 1: X, playter 2: O
 var turn = "X";
 var moves = 0;
+var winner = 0;
 
 app.post("/submit", (req, res) => {
   let row = req.body.row;
@@ -39,24 +40,20 @@ app.post("/submit", (req, res) => {
     // empty box
     moves++;
     board[row][col] = turn;
-    let winner = getWinner(row, col, turn);
-    res.render("index", { board: board });
+    winner = getWinner(row, col, turn);
     if (winner === 0) {
       if (moves < size * size) {
         switchTurn();
-      } else {
-        alert("Nobody won!");
       }
-    } else {
-      alert("Player " + winner + " won!");
     }
+    res.render("index", { board: board, winner: winner });
   } else {
     res.redirect("/");
   }
 });
 
 app.get("/", (req, res) => {
-  res.render("index", { board: board });
+  res.render("index", { board: board, winner: 0 });
 });
 
 app.listen(8080);
