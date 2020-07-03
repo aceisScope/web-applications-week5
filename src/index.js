@@ -6,6 +6,7 @@ const Board = require("./board");
 // Reading env variables (config example from https://github.com/sclorg/nodejs-ex/blob/master/server.js)
 var mongoURL = process.env.OPENSHIFT_MONGODB_DB_URL || process.env.MONGO_URL,
   mongoURLLabel = "";
+var port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080;
 
 // For local dev
 // var mongoURL = 'mongodb://localhost:27017/demodb';
