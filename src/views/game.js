@@ -6,5 +6,5 @@ table.onclick = function(event) {
 
   document.getElementById("row").value = row;
   document.getElementById("col").value = col;
-  document.getElementById("form").submit();
+  document.getElementById("game_form").submit();
 };

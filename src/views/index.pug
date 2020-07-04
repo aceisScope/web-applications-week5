@@ -10,7 +10,10 @@ html
         tr
           each col in row
             td=col
-    form(method='POST', action='/submit', type='hidden', id='form')
+    p.
+    form(method="POST", action='/restart', id="restart_form")
+      input(type='submit' value="Restart")
+    form(method='POST', action='/submit', type='hidden', id='game_form')
       input(type='hidden', name='row', id='row', value='')
       input(type='hidden', name='col', id='col', value='')
     script 

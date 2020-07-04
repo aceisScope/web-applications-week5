@@ -1,5 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const clone = require("rfdc")();
 const rules = require("./rules");
 const Board = require("./board");
 
@@ -60,13 +61,14 @@ app.use(express.urlencoded());
 app.set("views", __dirname + "/views");
 app.set("view engine", "pug");
 
-var board = [
+const emptyBoard = [
   [" ", " ", " ", " ", " "],
   [" ", " ", " ", " ", " "],
   [" ", " ", " ", " ", " "],
   [" ", " ", " ", " ", " "],
   [" ", " ", " ", " ", " "]
 ];
+var board = clone(emptyBoard);
 
 // player 1: X, playter 2: O
 var turn = "X";
@@ -96,6 +98,18 @@ app.post("/submit", (req, res) => {
   }
 
   res.redirect("/");
+});
+
+app.post("/restart", (req, res) => {
+  Board.deleteBoard((err, result) => {
+    if (err) throw err;
+
+    turn = "X";
+    moves = 0;
+    winner = 0;
+    board = clone(emptyBoard);
+    res.redirect("/");
+  });
 });
 
 app.get("/", (req, res) => {

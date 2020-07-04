@@ -33,3 +33,7 @@ module.exports.updateBoard = (row, col, status, callback) => {
 module.exports.getBoard = callback => {
   Board.find({}, callback);
 };
+
+module.exports.deleteBoard = callback => {
+  Board.remove({}, callback);
+};
