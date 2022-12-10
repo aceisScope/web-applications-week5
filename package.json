@@ -7,7 +7,7 @@
     "start": "node src/index.js localhost 8080"
   },
   "dependencies": {
-    "express": "4.16.4",
+    "express": "4.17.3",
     "mongodb": "3.4.0",
     "mongoose": "5.9.20",
     "pug": "3.0.0",
